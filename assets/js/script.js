@@ -1,4 +1,29 @@
 (() => {
+
+  let pieces = [];
+
+  class Piece {
+    constructor(color, x, y, image) {
+      this._color = color;
+      this._x = x;
+      this._y = y;
+      this._image = image;
+    }
+  }
+
+  class Black extends Piece {
+    constructor(x, y, image) {
+      super("black", x, y, image);
+    }
+  }
+
+  class White extends Piece {
+    constructor(king, x, y, image) {
+      super("white", x, y, image)
+      this._king = king;
+    }
+  }
+
   let board = document.getElementById("board");
   let table = document.createElement("table");
 
@@ -17,4 +42,14 @@
     table.appendChild(row);
   }
   board.appendChild(table);
+
+  function create_pieces(nbr) {
+    /*
+      create the pieces for the board
+    */
+    for (let i=0; i<nbr; i++) {
+      let pieces[i] = new Black(0, 0, "");
+    }
+
+  }
 })();
