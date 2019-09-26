@@ -1,29 +1,16 @@
+let entireBoard = [
+  [4, 0, 0, 1, 1, 1, 0, 0, 4],
+  [0, 0, 0, 0, 1, 0, 0, 0, 0],
+  [0, 0, 0, 0, 2, 0, 0, 0, 0],
+  [1, 0, 0, 0, 2, 0, 0, 0, 1],
+  [1, 1, 2, 2, 3, 2, 2, 1, 1],
+  [1, 0, 0, 0, 2, 0, 0, 0, 1],
+  [0, 0, 0, 0, 2, 0, 0, 0, 0],
+  [0, 0, 0, 0, 1, 0, 0, 0, 0],
+  [4, 0, 0, 1, 1, 1, 0, 0, 4]
+];
+
 (() => {
-
-  let pieces = [];
-
-  class Piece {
-    constructor(color, x, y, image) {
-      this._color = color;
-      this._x = x;
-      this._y = y;
-      this._image = image;
-    }
-  }
-
-  class Black extends Piece {
-    constructor(x, y, image) {
-      super("black", x, y, image);
-    }
-  }
-
-  class White extends Piece {
-    constructor(king, x, y, image) {
-      super("white", x, y, image)
-      this._king = king;
-    }
-  }
-
   let board = document.getElementById("board");
   let table = document.createElement("table");
 
@@ -43,14 +30,47 @@
   }
   board.appendChild(table);
 
-  function create_pieces(nbr) {
-    /*
-      create the pieces for the board
-    */
-    for (let i=0; i<nbr; i++) {
-      pieces.push(new Black(0, 0, "assets/img/black_piece.svg"));
-    }
-    console.log(pieces);
-  }
-
+  //Parcourir tableau
+  entireBoard.forEach((row, i) => {
+    row.forEach((cell, j) => {
+      switch (cell) {
+        case 1:
+          let imgBlack = document.createElement("img");
+          imgBlack.setAttribute("src", "assets/img/black_piece.svg");
+          document
+            .getElementById("board")
+            .querySelectorAll("tr")
+            [i].querySelectorAll("td")
+            [j].appendChild(imgBlack);
+          break;
+        case 2:
+          let imgWhite = document.createElement("img");
+          imgWhite.setAttribute("src", "assets/img/white_piece.svg");
+          document
+            .getElementById("board")
+            .querySelectorAll("tr")
+            [i].querySelectorAll("td")
+            [j].appendChild(imgWhite);
+          break;
+        case 3:
+          let imgKing = document.createElement("img");
+          imgKing.setAttribute("src", "assets/img/white_king.svg");
+          document
+            .getElementById("board")
+            .querySelectorAll("tr")
+            [i].querySelectorAll("td")
+            [j].appendChild(imgKing);
+          break;
+        case 4:
+          let imgCorner = document.createElement("img");
+          imgCorner.setAttribute("src", "assets/img/win_condition.svg");
+          document
+            .getElementById("board")
+            .querySelectorAll("tr")
+            [i].querySelectorAll("td")
+            [j].appendChild(imgCorner);
+          break;
+      }
+    });
+  });
 })();
