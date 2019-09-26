@@ -48,8 +48,9 @@
       create the pieces for the board
     */
     for (let i=0; i<nbr; i++) {
-      let pieces[i] = new Black(0, 0, "");
+      pieces.push(new Black(0, 0, "assets/img/black_piece.svg"));
     }
-
+    console.log(pieces);
   }
+
 })();
