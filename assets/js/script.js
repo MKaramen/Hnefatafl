@@ -10,6 +10,16 @@ let entireBoard = [
   [4, 0, 0, 1, 1, 1, 0, 0, 4]
 ];
 
+const move = column => {
+  let x = Array.from(column.parentNode.parentNode.children).indexOf(
+    column.parentNode
+  );
+
+  let y = Array.from(column.parentNode.children).indexOf(column);
+
+  console.log(x + " " + y);
+};
+
 (() => {
   let board = document.getElementById("board");
   let table = document.createElement("table");
@@ -25,6 +35,9 @@ let entireBoard = [
       } else {
         column.setAttribute("class", "bg_board2");
       }
+      column.addEventListener("click", () => {
+        move(column);
+      });
     }
     table.appendChild(row);
   }
