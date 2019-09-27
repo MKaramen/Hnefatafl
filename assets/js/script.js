@@ -10,14 +10,23 @@ let entireBoard = [
   [4, 0, 0, 1, 1, 1, 0, 0, 4]
 ];
 
-const move = column => {
-  let x = Array.from(column.parentNode.parentNode.children).indexOf(
-    column.parentNode
-  );
-
-  let y = Array.from(column.parentNode.children).indexOf(column);
-
+const move = (x, y) => {
+  let number = entireBoard[x][y];
   console.log(x + " " + y);
+
+  switch (number) {
+    case 4:
+      console.log("I'm a corner");
+      break;
+    case 2:
+      console.log("I'm a white piece");
+      break;
+    case 1:
+      console.log("I'm a black piece");
+      break;
+    case 3:
+      console.log("I'm a King");
+  }
 };
 
 (() => {
@@ -36,7 +45,7 @@ const move = column => {
         column.setAttribute("class", "bg_board2");
       }
       column.addEventListener("click", () => {
-        move(column);
+        move(i, j);
       });
     }
     table.appendChild(row);
