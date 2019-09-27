@@ -14,7 +14,21 @@ let selectedPiece = {
   color: -1,
   x: -1,
   y: -1
-}
+};
+
+const currentPiece = (number, x, y) => {
+  if (selectedPiece.color == -1) {
+    selectedPiece.color = number;
+    selectedPiece.x = x;
+    selectedPiece.y = y;
+  } else {
+    selectedPiece.color = -1;
+    selectedPiece.x = -1;
+    selectedPiece.y = -1;
+  }
+  let color = number == 1 ? "black" : number == 2 ? "white" : "king";
+  console.log(color, selectedPiece);
+};
 
 const selection = (x, y) => {
   let number = entireBoard[x][y];
@@ -25,24 +39,24 @@ const selection = (x, y) => {
       move(number, x, y);
       break;
     case 4:
-      console.log("I'm a corner");
+      if (selectedPiece.color == 3) {
+        move(number, x, y);
+      }
       break;
     default:
       currentPiece(number, x, y);
   }
 };
 
-const checkMove = (x, y) => {
-  return selectedPiece.color != -1 && selectedPiece.x == x || selectedPiece.y == y;
-}
+const checkMove = (x, y) =>
+  (selectedPiece.color != -1 && selectedPiece.x == x) || selectedPiece.y == y;
 
-const checkValidMove = (pieceX, pieceY, x, y) => {
-  res = true;
-  let i=pieceX;
+const checkValidMove = (origineX, origineY, x, y) => {
+  let res = true;
+  let i = origineX;
   while (i <= x && res) {
-    let j=pieceY;
+    let j = origineY;
     while (j <= y && res) {
-      
       if (entireBoard[i][j] != 0 && entireBoard[i][j] != 4) {
         res = false;
       }
@@ -51,51 +65,50 @@ const checkValidMove = (pieceX, pieceY, x, y) => {
     i++;
   }
   return res;
-}
+};
 
 const move = (number, x, y) => {
   if (checkMove(x, y)) {
     // console.log("yes");
     let validMove;
     if (selectedPiece.x == x) {
-      if (selectedPiece.y < y){
-        validMove = checkValidMove(x, selectedPiece.y+1, x, y);
+      if (selectedPiece.y < y) {
+        validMove = checkValidMove(x, selectedPiece.y + 1, x, y);
+      } else {
+        validMove = checkValidMove(x, y, x, selectedPiece.y - 1);
       }
-      else {
-        validMove = checkValidMove(x, y, x, selectedPiece.y-1);
-
-      }
-    }
-    else if (selectedPiece.y == y){
-      if (selectedPiece.x < x){
-        validMove = checkValidMove(selectedPiece.x+1, y, x, y);
-      }
-      else {
-        validMove = checkValidMove(x, y, selectedPiece.x-1, y);
+    } else if (selectedPiece.y == y) {
+      if (selectedPiece.x < x) {
+        validMove = checkValidMove(selectedPiece.x + 1, y, x, y);
+      } else {
+        validMove = checkValidMove(x, y, selectedPiece.x - 1, y);
       }
     }
 
     if (validMove) {
       let img = document
-                        .getElementById("board")
-                        .querySelectorAll("tr")
-                        [selectedPiece.x].querySelectorAll("td")
-                        [selectedPiece.y].querySelector("img")
-      img.setAttribute("src", "")
+        .getElementById("board")
+        .querySelectorAll("tr")
+        [selectedPiece.x].querySelectorAll("td")
+        [selectedPiece.y].querySelector("img");
+      img.setAttribute("src", "");
 
-      if (selectedPiece.x == parseInt(entireBoard.length/2) && selectedPiece.y == parseInt(entireBoard.length/2)){
+      if (
+        selectedPiece.x == parseInt(entireBoard.length / 2) &&
+        selectedPiece.y == parseInt(entireBoard.length / 2)
+      ) {
         number = 4;
-        img.setAttribute("src", "assets/img/win_condition.svg")
+        img.setAttribute("src", "assets/img/win_condition.svg");
       }
-      console.log(number, parseInt(entireBoard.length/2));
+      console.log(number, parseInt(entireBoard.length / 2));
       entireBoard[selectedPiece.x][selectedPiece.y] = number;
       entireBoard[x][y] = selectedPiece.color;
-      
+
       img = document
-                    .getElementById("board")
-                    .querySelectorAll("tr")
-                    [x].querySelectorAll("td")
-                    [y].querySelector("img")
+        .getElementById("board")
+        .querySelectorAll("tr")
+        [x].querySelectorAll("td")
+        [y].querySelector("img");
 
       switch (selectedPiece.color) {
         case 1:
@@ -109,34 +122,14 @@ const move = (number, x, y) => {
           break;
       }
 
-    selectedPiece.color = -1;
-    selectedPiece.x = -1;
-    selectedPiece.y = -1;
+      selectedPiece.color = -1;
+      selectedPiece.x = -1;
+      selectedPiece.y = -1;
     }
-
-  }
-  else {
+  } else {
     console.log("nope");
-    
   }
-}
-
-const currentPiece = (number, x, y) => {
-  if (selectedPiece.color == -1) {
-    selectedPiece.color = number;
-    selectedPiece.x = x;
-    selectedPiece.y = y;
-  }
-  else if (selectedPiece.x == x && selectedPiece.y == y) {
-    selectedPiece.color = -1;
-    selectedPiece.x = -1;
-    selectedPiece.y = -1;
-  }
-  let color = number == 1 ? "black" :number == 2? "white": "king";
-  console.log(color, selectedPiece);
-}
-
-
+};
 
 (() => {
   let board = document.getElementById("board");
@@ -180,10 +173,10 @@ const currentPiece = (number, x, y) => {
           break;
       }
       document
-            .getElementById("board")
-            .querySelectorAll("tr")
-            [i].querySelectorAll("td")
-            [j].appendChild(img);
+        .getElementById("board")
+        .querySelectorAll("tr")
+        [i].querySelectorAll("td")
+        [j].appendChild(img);
     });
   });
 })();
