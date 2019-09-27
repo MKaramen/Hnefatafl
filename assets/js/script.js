@@ -43,27 +43,77 @@ const checkValidMove = (pieceX, pieceY, x, y) => {
     let j=pieceY;
     while (j <= y && res) {
       
-      if (entireBoard[i][j] != 0) {
+      if (entireBoard[i][j] != 0 && entireBoard[i][j] != 4) {
         res = false;
       }
       j++;
     }
     i++;
   }
-  console.log("res:", res);
   return res;
 }
 
 const move = (number, x, y) => {
   if (checkMove(x, y)) {
-    console.log("yes");
+    // console.log("yes");
     let validMove;
     if (selectedPiece.x == x) {
-      validMove = checkValidMove(x, selectedPiece.y+1, x, y);
+      if (selectedPiece.y < y){
+        validMove = checkValidMove(x, selectedPiece.y+1, x, y);
+      }
+      else {
+        validMove = checkValidMove(x, y, x, selectedPiece.y-1);
+
+      }
     }
     else if (selectedPiece.y == y){
-        validMove = checkValidMove(selectedPiece.x +1, y, x, y);
+      if (selectedPiece.x < x){
+        validMove = checkValidMove(selectedPiece.x+1, y, x, y);
+      }
+      else {
+        validMove = checkValidMove(x, y, selectedPiece.x-1, y);
+      }
     }
+
+    if (validMove) {
+      let img = document
+                        .getElementById("board")
+                        .querySelectorAll("tr")
+                        [selectedPiece.x].querySelectorAll("td")
+                        [selectedPiece.y].querySelector("img")
+      img.setAttribute("src", "")
+
+      if (selectedPiece.x == parseInt(entireBoard.length/2) && selectedPiece.y == parseInt(entireBoard.length/2)){
+        number = 4;
+        img.setAttribute("src", "assets/img/win_condition.svg")
+      }
+      console.log(number, parseInt(entireBoard.length/2));
+      entireBoard[selectedPiece.x][selectedPiece.y] = number;
+      entireBoard[x][y] = selectedPiece.color;
+      
+      img = document
+                    .getElementById("board")
+                    .querySelectorAll("tr")
+                    [x].querySelectorAll("td")
+                    [y].querySelector("img")
+
+      switch (selectedPiece.color) {
+        case 1:
+          img.setAttribute("src", "assets/img/black_piece.svg");
+          break;
+        case 2:
+          img.setAttribute("src", "assets/img/white_piece.svg");
+          break;
+        case 3:
+          img.setAttribute("src", "assets/img/white_king.svg");
+          break;
+      }
+
+    selectedPiece.color = -1;
+    selectedPiece.x = -1;
+    selectedPiece.y = -1;
+    }
+
   }
   else {
     console.log("nope");
