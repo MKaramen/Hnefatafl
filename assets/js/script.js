@@ -10,24 +10,83 @@ let entireBoard = [
   [4, 0, 0, 1, 1, 1, 0, 0, 4]
 ];
 
-const move = (x, y) => {
+let selectedPiece = {
+  color: -1,
+  x: -1,
+  y: -1
+}
+
+const selection = (x, y) => {
   let number = entireBoard[x][y];
-  console.log(x + " " + y);
+  // console.log(x + " " + y);
 
   switch (number) {
+    case 0:
+      move(number, x, y);
+      break;
     case 4:
       console.log("I'm a corner");
       break;
-    case 2:
-      console.log("I'm a white piece");
-      break;
-    case 1:
-      console.log("I'm a black piece");
-      break;
-    case 3:
-      console.log("I'm a King");
+    default:
+      currentPiece(number, x, y);
   }
 };
+
+const checkMove = (x, y) => {
+  return selectedPiece.color != -1 && selectedPiece.x == x || selectedPiece.y == y;
+}
+
+const checkValidMove = (pieceX, pieceY, x, y) => {
+  res = true;
+  let i=pieceX;
+  while (i <= x && res) {
+    let j=pieceY;
+    while (j <= y && res) {
+      
+      if (entireBoard[i][j] != 0) {
+        res = false;
+      }
+      j++;
+    }
+    i++;
+  }
+  console.log("res:", res);
+  return res;
+}
+
+const move = (number, x, y) => {
+  if (checkMove(x, y)) {
+    console.log("yes");
+    let validMove;
+    if (selectedPiece.x == x) {
+      validMove = checkValidMove(x, selectedPiece.y+1, x, y);
+    }
+    else if (selectedPiece.y == y){
+        validMove = checkValidMove(selectedPiece.x +1, y, x, y);
+    }
+  }
+  else {
+    console.log("nope");
+    
+  }
+}
+
+const currentPiece = (number, x, y) => {
+  if (selectedPiece.color == -1) {
+    selectedPiece.color = number;
+    selectedPiece.x = x;
+    selectedPiece.y = y;
+  }
+  else if (selectedPiece.x == x && selectedPiece.y == y) {
+    selectedPiece.color = -1;
+    selectedPiece.x = -1;
+    selectedPiece.y = -1;
+  }
+  let color = number == 1 ? "black" :number == 2? "white": "king";
+  console.log(color, selectedPiece);
+}
+
+
 
 (() => {
   let board = document.getElementById("board");
@@ -45,7 +104,7 @@ const move = (x, y) => {
         column.setAttribute("class", "bg_board2");
       }
       column.addEventListener("click", () => {
-        move(i, j);
+        selection(i, j);
       });
     }
     table.appendChild(row);
@@ -55,44 +114,26 @@ const move = (x, y) => {
   //Parcourir tableau
   entireBoard.forEach((row, i) => {
     row.forEach((cell, j) => {
+      let img = document.createElement("img");
       switch (cell) {
         case 1:
-          let imgBlack = document.createElement("img");
-          imgBlack.setAttribute("src", "assets/img/black_piece.svg");
-          document
-            .getElementById("board")
-            .querySelectorAll("tr")
-            [i].querySelectorAll("td")
-            [j].appendChild(imgBlack);
+          img.setAttribute("src", "assets/img/black_piece.svg");
           break;
         case 2:
-          let imgWhite = document.createElement("img");
-          imgWhite.setAttribute("src", "assets/img/white_piece.svg");
-          document
-            .getElementById("board")
-            .querySelectorAll("tr")
-            [i].querySelectorAll("td")
-            [j].appendChild(imgWhite);
+          img.setAttribute("src", "assets/img/white_piece.svg");
           break;
         case 3:
-          let imgKing = document.createElement("img");
-          imgKing.setAttribute("src", "assets/img/white_king.svg");
-          document
-            .getElementById("board")
-            .querySelectorAll("tr")
-            [i].querySelectorAll("td")
-            [j].appendChild(imgKing);
+          img.setAttribute("src", "assets/img/white_king.svg");
           break;
         case 4:
-          let imgCorner = document.createElement("img");
-          imgCorner.setAttribute("src", "assets/img/win_condition.svg");
-          document
+          img.setAttribute("src", "assets/img/win_condition.svg");
+          break;
+      }
+      document
             .getElementById("board")
             .querySelectorAll("tr")
             [i].querySelectorAll("td")
-            [j].appendChild(imgCorner);
-          break;
-      }
+            [j].appendChild(img);
     });
   });
 })();
