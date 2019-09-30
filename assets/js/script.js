@@ -121,13 +121,87 @@ const move = (number, x, y) => {
           img.setAttribute("src", "assets/img/white_king.svg");
           break;
       }
-
+      checkArea(x, y);
       selectedPiece.color = -1;
       selectedPiece.x = -1;
       selectedPiece.y = -1;
     }
   } else {
     console.log("nope");
+  }
+};
+
+const caseScenario = () => {};
+
+const checkArea = (x, y, color) => {
+  if (entireBoard[x][y] == 1) {
+    color1 = 1;
+    color2 = 2;
+  }
+  if (entireBoard[x][y] == 2) {
+    color1 = 2;
+    color2 = 1;
+  }
+  // Y-1
+  if (y - 1 >= 0 && y - 2 >= 0) {
+    if (
+      entireBoard[x][y] == color1 &&
+      entireBoard[x][y - 1] == color2 &&
+      (entireBoard[x][y - 2] == color1 || entireBoard[x][y - 2] == 4)
+    ) {
+      entireBoard[x][y - 1] = 0;
+      document
+        .querySelectorAll("tr")
+        [x].querySelectorAll("td")
+        [y - 1].querySelector("img")
+        .setAttribute("src", "");
+    }
+  }
+  //Y+1
+  if (y + 1 >= 0 && y + 2 <= entireBoard.length) {
+    if (
+      entireBoard[x][y] == color1 &&
+      entireBoard[x][y + 1] == color2 &&
+      (entireBoard[x][y + 2] == color1 || entireBoard[x][y + 2] == 4)
+    ) {
+      entireBoard[x][y + 1] = 0;
+      document
+        .querySelectorAll("tr")
+        [x].querySelectorAll("td")
+        [y + 1].querySelector("img")
+        .setAttribute("src", "");
+    }
+  }
+  //X+1
+  if (x + 1 >= 0 && x + 2 <= entireBoard.length) {
+    if (
+      entireBoard[x][y] == color1 &&
+      entireBoard[x + 1][y] == color2 &&
+      (entireBoard[x + 2][y] == color1 || entireBoard[x + 2][y] == 4)
+    ) {
+      entireBoard[x + 1][y] = 0;
+      document
+        .querySelectorAll("tr")
+        [x + 1].querySelectorAll("td")
+        [y].querySelector("img")
+        .setAttribute("src", "");
+    }
+  }
+
+  // X-1
+  if (x - 1 >= 0 && x - 2 >= 0) {
+    if (
+      entireBoard[x][y] == color1 &&
+      entireBoard[x - 1][y] == color2 &&
+      (entireBoard[x - 2][y] == color1 || entireBoard[x - 2][y] == 4)
+    ) {
+      entireBoard[x - 1][y] = 0;
+      document
+        .querySelectorAll("tr")
+        [x - 1].querySelectorAll("td")
+        [y].querySelector("img")
+        .setAttribute("src", "");
+    }
   }
 };
 
