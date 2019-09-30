@@ -151,20 +151,21 @@ const move = (number, x, y) => {
 };
 
 const checkArea = (x, y) => {
+  let color1, color2;
   if (entireBoard[x][y] == 1) {
     color1 = 1;
     color2 = 2;
   }
-  if (entireBoard[x][y] == 2) {
+  if (entireBoard[x][y] == 2 || entireBoard[x][y] == 3) {
     color1 = 2;
     color2 = 1;
   }
   // Y-1
   if (y - 1 >= 0 && y - 2 >= 0) {
     if (
-      entireBoard[x][y] == color1 &&
+      (entireBoard[x][y] == color1 || entireBoard[x][y] == 3) &&
       entireBoard[x][y - 1] == color2 &&
-      (entireBoard[x][y - 2] == color1 || entireBoard[x][y - 2] == 4)
+      (entireBoard[x][y - 2] == color1 || entireBoard[x][y - 2] == 4 || (entireBoard[x][y - 2] == 3 && entireBoard[x][y] == 2))
     ) {
       entireBoard[x][y - 1] = 0;
       document
@@ -177,9 +178,9 @@ const checkArea = (x, y) => {
   //Y+1
   if (y + 1 < entireBoard.length && y + 2 < entireBoard.length) {
     if (
-      entireBoard[x][y] == color1 &&
+      (entireBoard[x][y] == color1 || entireBoard[x][y] == 3) &&
       entireBoard[x][y + 1] == color2 &&
-      (entireBoard[x][y + 2] == color1 || entireBoard[x][y + 2] == 4)
+      (entireBoard[x][y + 2] == color1 || entireBoard[x][y + 2] == 4 || (entireBoard[x][y + 2] == 3 && entireBoard[x][y] == 2))
     ) {
       entireBoard[x][y + 1] = 0;
       document
@@ -192,9 +193,9 @@ const checkArea = (x, y) => {
   //X+1
   if (x + 1 < entireBoard.length && x + 2 < entireBoard.length) {
     if (
-      entireBoard[x][y] == color1 &&
+      (entireBoard[x][y] == color1 || entireBoard[x][y] == 3) &&
       entireBoard[x + 1][y] == color2 &&
-      (entireBoard[x + 2][y] == color1 || entireBoard[x + 2][y] == 4)
+      (entireBoard[x + 2][y] == color1 || entireBoard[x + 2][y] == 4 || (entireBoard[x + 2][y] == 3 && entireBoard[x][y] == 2))
     ) {
       entireBoard[x + 1][y] = 0;
       document
@@ -208,9 +209,9 @@ const checkArea = (x, y) => {
   // X-1
   if (x - 1 >= 0 && x - 2 >= 0) {
     if (
-      entireBoard[x][y] == color1 &&
+      (entireBoard[x][y] == color1 || entireBoard[x][y] == 3) &&
       entireBoard[x - 1][y] == color2 &&
-      (entireBoard[x - 2][y] == color1 || entireBoard[x - 2][y] == 4)
+      (entireBoard[x - 2][y] == color1 || entireBoard[x - 2][y] == 4 || (entireBoard[x - 2][y] == 3 && entireBoard[x][y] == 2))
     ) {
       entireBoard[x - 1][y] = 0;
       document
