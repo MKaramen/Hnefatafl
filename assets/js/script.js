@@ -10,6 +10,8 @@ let entireBoard = [
   [4, 0, 0, 1, 1, 1, 0, 0, 4]
 ];
 
+let inGame = true;
+
 let selectedPiece = {
   color: -1,
   x: -1,
@@ -41,6 +43,9 @@ const selection = (x, y) => {
     case 4:
       if (selectedPiece.color == 3) {
         move(number, x, y);
+        if (x != 4 && y != 4) {
+          checkWin(x, y);
+        }
       }
       break;
     default:
@@ -68,7 +73,7 @@ const checkValidMove = (origineX, origineY, x, y) => {
 };
 
 const move = (number, x, y) => {
-  if (checkMove(x, y)) {
+  if (checkMove(x, y) && inGame == true) {
     // console.log("yes");
     let validMove;
     if (selectedPiece.x == x) {
@@ -92,15 +97,15 @@ const move = (number, x, y) => {
         [selectedPiece.x].querySelectorAll("td")
         [selectedPiece.y].querySelector("img");
       img.setAttribute("src", "");
-
       if (
         selectedPiece.x == parseInt(entireBoard.length / 2) &&
         selectedPiece.y == parseInt(entireBoard.length / 2)
       ) {
         number = 4;
         img.setAttribute("src", "assets/img/win_condition.svg");
+      } else if (number == 4) {
+        number = 0;
       }
-      console.log(number, parseInt(entireBoard.length / 2));
       entireBoard[selectedPiece.x][selectedPiece.y] = number;
       entireBoard[x][y] = selectedPiece.color;
 
@@ -131,9 +136,7 @@ const move = (number, x, y) => {
   }
 };
 
-const caseScenario = () => {};
-
-const checkArea = (x, y, color) => {
+const checkArea = (x, y) => {
   if (entireBoard[x][y] == 1) {
     color1 = 1;
     color2 = 2;
@@ -202,6 +205,32 @@ const checkArea = (x, y, color) => {
         [y].querySelector("img")
         .setAttribute("src", "");
     }
+  }
+};
+
+//Check if king is kill or not
+// const killKing = (x, y) => {
+//   if (y - 1 >= 0 && y - 2 >= 0) {
+//     if (
+//       entireBoard[x][y] == 3 &&
+//       entireBoard[x][y - 1] == 2 &&
+//       (entireBoard[x][y - 2] == color1 || entireBoard[x][y - 2] == 4)
+//     ) {
+//       entireBoard[x][y - 1] = 0;
+//       document
+//         .querySelectorAll("tr")
+//         [x].querySelectorAll("td")
+//         [y - 1].querySelector("img")
+//         .setAttribute("src", "");
+//     }
+//   }
+// };
+
+//CHECK WIN
+const checkWin = (x, y) => {
+  if (entireBoard[x][y] == 3) {
+    alert("White win");
+    inGame = false;
   }
 };
 
