@@ -226,12 +226,25 @@ const checkArea = (x, y) => {
 const killKing = () => {
 
   let x = king.x, y = king.y, count = 0;
+  let throne = false;
 
   if (inGame) {
-    if (x-1>=0 && (entireBoard[x-1][y] == 1 || entireBoard[x-1][y] == 4)) count++;
-    if (x+1 < entireBoard.length && (entireBoard[x+1][y] == 1 || entireBoard[x+1][y] == 4)) count++;
-    if (y-1>=0 && (entireBoard[x][y-1] == 1 || entireBoard[x][y-1] == 4)) count++;
-    if (y+1 < entireBoard.length && (entireBoard[x][y+1] == 1 || entireBoard[x][y+1] == 4)) count++;
+    if (x-1>=0 && (entireBoard[x-1][y] == 1 || entireBoard[x-1][y] == 4)){
+      count++;
+      if (x-1 == 4 && y == 4) throne = true;
+    }
+    if (x+1 < entireBoard.length && (entireBoard[x+1][y] == 1 || entireBoard[x+1][y] == 4)){
+      count++;
+      if (x+1 == 4 && y == 4) throne = true;
+    }
+    if (y-1>=0 && (entireBoard[x][y-1] == 1 || entireBoard[x][y-1] == 4 )){
+      count++;
+      if (x == 4 && y-1 == 4) throne = true;
+    }
+    if (y+1 < entireBoard.length && (entireBoard[x][y+1] == 1 || entireBoard[x][y+1] == 4)){
+      count++;
+      if (x-1 == 4 && y == 4) throne = true;
+    }
   }
 
   let numberWhitePiece = 0;
@@ -240,7 +253,7 @@ const killKing = () => {
       if (cell == 2) numberWhitePiece++;
     })
   })
-  if (count == 4 || (count == 3 && numberWhitePiece == 0)) {
+  if (count == 4 || (count == 3 && numberWhitePiece == 0 && !throne)) {
     inGame = false;
     alert("Black win");
   }
