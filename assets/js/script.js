@@ -11,6 +11,7 @@ let entireBoard = [
 ];
 
 let inGame = true;
+let black = true;
 
 let selectedPiece = {
   color: -1,
@@ -18,11 +19,19 @@ let selectedPiece = {
   y: -1
 };
 
+let king = {
+  x: 4,
+  y: 4
+}
+
 const currentPiece = (number, x, y) => {
   if (selectedPiece.color == -1) {
-    selectedPiece.color = number;
-    selectedPiece.x = x;
-    selectedPiece.y = y;
+    if ((number == 1 && black) || (number != 1 && !black)) {
+      selectedPiece.color = number;
+      selectedPiece.x = x;
+      selectedPiece.y = y;
+    }
+    
   } else {
     selectedPiece.color = -1;
     selectedPiece.x = -1;
@@ -51,6 +60,8 @@ const selection = (x, y) => {
     default:
       currentPiece(number, x, y);
   }
+
+  killKing();
 };
 
 const checkMove = (x, y) =>
@@ -124,12 +135,15 @@ const move = (number, x, y) => {
           break;
         case 3:
           img.setAttribute("src", "assets/img/white_king.svg");
+          king.x = x;
+          king.y = y;
           break;
       }
       checkArea(x, y);
       selectedPiece.color = -1;
       selectedPiece.x = -1;
       selectedPiece.y = -1;
+      black = !black;
     }
   } else {
     console.log("nope");
@@ -161,7 +175,7 @@ const checkArea = (x, y) => {
     }
   }
   //Y+1
-  if (y + 1 >= 0 && y + 2 <= entireBoard.length) {
+  if (y + 1 < entireBoard.length && y + 2 < entireBoard.length) {
     if (
       entireBoard[x][y] == color1 &&
       entireBoard[x][y + 1] == color2 &&
@@ -176,7 +190,7 @@ const checkArea = (x, y) => {
     }
   }
   //X+1
-  if (x + 1 >= 0 && x + 2 <= entireBoard.length) {
+  if (x + 1 < entireBoard.length && x + 2 < entireBoard.length) {
     if (
       entireBoard[x][y] == color1 &&
       entireBoard[x + 1][y] == color2 &&
@@ -209,22 +223,28 @@ const checkArea = (x, y) => {
 };
 
 //Check if king is kill or not
-// const killKing = (x, y) => {
-//   if (y - 1 >= 0 && y - 2 >= 0) {
-//     if (
-//       entireBoard[x][y] == 3 &&
-//       entireBoard[x][y - 1] == 2 &&
-//       (entireBoard[x][y - 2] == color1 || entireBoard[x][y - 2] == 4)
-//     ) {
-//       entireBoard[x][y - 1] = 0;
-//       document
-//         .querySelectorAll("tr")
-//         [x].querySelectorAll("td")
-//         [y - 1].querySelector("img")
-//         .setAttribute("src", "");
-//     }
-//   }
-// };
+const killKing = () => {
+
+  let x = king.x, y = king.y, count = 0;
+
+  if (inGame) {
+    if (x-1>=0 && (entireBoard[x-1][y] == 1 || entireBoard[x-1][y] == 4)) count++;
+    if (x+1 < entireBoard.length && (entireBoard[x+1][y] == 1 || entireBoard[x+1][y] == 4)) count++;
+    if (y-1>=0 && (entireBoard[x][y-1] == 1 || entireBoard[x][y-1] == 4)) count++;
+    if (y+1 < entireBoard.length && (entireBoard[x][y+1] == 1 || entireBoard[x][y+1] == 4)) count++;
+  }
+
+  let numberWhitePiece = 0;
+  entireBoard.forEach(row => {
+    row.forEach(cell => {
+      if (cell == 2) numberWhitePiece++;
+    })
+  })
+  if (count == 4 || (count == 3 && numberWhitePiece == 0)) {
+    inGame = false;
+    alert("Black win");
+  }
+};
 
 //CHECK WIN
 const checkWin = (x, y) => {
