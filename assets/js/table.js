@@ -1,4 +1,4 @@
-
+import {selection} from "./boardGame";
 
 //Creat table inside board id
 export const createTable = () => {
@@ -15,9 +15,10 @@ export const createTable = () => {
         } else {
         column.setAttribute("class", "bg_board2");
         }
-        // column.addEventListener("click", () => {
-        // selection(i, j);
-        // });
+        column.setAttribute("id", `${i} ${j}`);
+        column.addEventListener("click", () => {
+            selection(column.id);
+        });
     }
     table.appendChild(row);
     }

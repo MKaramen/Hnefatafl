@@ -90,13 +90,21 @@
 /*!********************************!*\
   !*** ./assets/js/boardGame.js ***!
   \********************************/
-/*! exports provided: printTable */
+/*! exports provided: selection, printTable */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "selection", function() { return selection; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "printTable", function() { return printTable; });
-let board9X9 = [
+/* harmony import */ var _chess__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./chess */ "./assets/js/chess.js");
+/* harmony import */ var _kingCase__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./kingCase */ "./assets/js/kingCase.js");
+/* harmony import */ var _game__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./game */ "./assets/js/game.js");
+
+
+
+
+const board9X9 = [
     [4, 0, 0, 1, 1, 1, 0, 0, 4],
     [0, 0, 0, 0, 1, 0, 0, 0, 0],
     [0, 0, 0, 0, 2, 0, 0, 0, 0],
@@ -108,33 +116,141 @@ let board9X9 = [
     [4, 0, 0, 1, 1, 1, 0, 0, 4]
   ];
 
+const black = "assets/img/black_piece.svg";
+const white = "assets/img/white_piece.svg";
+const white_king = "assets/img/white_king.svg";
+const kingCase = "assets/img/win_condition.svg";
+
+let game;
+
+const selection = (id) => {
+  // let number = entireBoard[x][y];
+  console.log(id);
+
+  // switch (number) {
+  //   case 0:
+  //     move(number, x, y);
+  //     break;
+  //   case 4:
+  //     if (selectedPiece.color == 3) {
+  //       move(number, x, y);
+  //       if (x != 4 && y != 4) {
+  //         checkWin(x, y);
+  //       }
+  //     }
+  //     break;
+  //   default:
+  //     currentPiece(number, x, y);
+  // }
+
+  // killKing();
+};
 
 //Parcourir tableau
 const printTable = () => {
-    board9X9.forEach((row, i) => {
-        row.forEach((cell, j) => {
-          let img = document.createElement("img");
-          switch (cell) {
-            case 1:
-              img.setAttribute("src", "assets/img/black_piece.svg");
-              break;
-            case 2:
-              img.setAttribute("src", "assets/img/white_piece.svg");
-              break;
-            case 3:
-              img.setAttribute("src", "assets/img/white_king.svg");
-              break;
-            case 4:
-              img.setAttribute("src", "assets/img/win_condition.svg");
-              break;
-          }
-          document
-            .getElementById("board")
-            .querySelectorAll("tr")
-            [i].querySelectorAll("td")
-            [j].appendChild(img);
-        });
+  game = new _game__WEBPACK_IMPORTED_MODULE_2__["Game"]();
+  board9X9.forEach((row, i) => {
+      row.forEach((cell, j) => {
+        let img = document.createElement("img");
+        switch (cell) {
+          case 1:
+            img.setAttribute("src", black);
+            game.addPiece(i, j, new _chess__WEBPACK_IMPORTED_MODULE_0__["Chess"]("black", black));
+            break;
+          case 2:
+            img.setAttribute("src", white);
+            game.addPiece(i, j, new _chess__WEBPACK_IMPORTED_MODULE_0__["Chess"]("white", white));
+            break;
+          case 3:
+            img.setAttribute("src", white_king);
+            game.addPiece(i, j, new _chess__WEBPACK_IMPORTED_MODULE_0__["King"]("white", white_king));
+            break;
+          case 4:
+            img.setAttribute("src", kingCase);
+            game.addKingCase(i, j, new _kingCase__WEBPACK_IMPORTED_MODULE_1__["KingCase"](kingCase));
+            break;
+        }
+        document
+          .getElementById("board")
+          .querySelectorAll("tr")
+          [i].querySelectorAll("td")
+          [j].appendChild(img);
       });
+    });
+  console.log(game);
+  console.log(game._pieces['4 4'] instanceof _chess__WEBPACK_IMPORTED_MODULE_0__["Chess"]);
+  
+}
+
+/***/ }),
+
+/***/ "./assets/js/chess.js":
+/*!****************************!*\
+  !*** ./assets/js/chess.js ***!
+  \****************************/
+/*! exports provided: Chess, King */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Chess", function() { return Chess; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "King", function() { return King; });
+class Chess{
+    constructor(color, img){
+        this._color = color;
+        this._img = img;
+    }
+}
+
+class King extends Chess{
+    constructor(color, img) {
+        super(color, img);
+        this._king = true;
+    }
+}
+
+/***/ }),
+
+/***/ "./assets/js/game.js":
+/*!***************************!*\
+  !*** ./assets/js/game.js ***!
+  \***************************/
+/*! exports provided: Game */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Game", function() { return Game; });
+class Game{
+    constructor(){
+      this._pieces = {};
+      this._kingCase = {};
+    }
+    addPiece(x, y, chess){
+      this._pieces[`${x} ${y}`] = chess;
+    }
+  
+    addKingCase(x, y, kCase){
+      this._kingCase[`${x} ${y}`] = kCase;
+    }
+  }
+
+/***/ }),
+
+/***/ "./assets/js/kingCase.js":
+/*!*******************************!*\
+  !*** ./assets/js/kingCase.js ***!
+  \*******************************/
+/*! exports provided: KingCase */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "KingCase", function() { return KingCase; });
+class KingCase{
+    constructor(img){
+        this._img = img;
+    }
 }
 
 /***/ }),
@@ -171,6 +287,7 @@ __webpack_require__.r(__webpack_exports__);
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "createTable", function() { return createTable; });
+/* harmony import */ var _boardGame__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./boardGame */ "./assets/js/boardGame.js");
 
 
 //Creat table inside board id
@@ -188,9 +305,10 @@ const createTable = () => {
         } else {
         column.setAttribute("class", "bg_board2");
         }
-        // column.addEventListener("click", () => {
-        // selection(i, j);
-        // });
+        column.setAttribute("id", `${i} ${j}`);
+        column.addEventListener("click", () => {
+            Object(_boardGame__WEBPACK_IMPORTED_MODULE_0__["selection"])(column.id);
+        });
     }
     table.appendChild(row);
     }
