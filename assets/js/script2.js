@@ -269,51 +269,51 @@ const checkWin = (x, y) => {
 };
 
 (() => {
-  let board = document.getElementById("board");
-  let table = document.createElement("table");
+  // let board = document.getElementById("board");
+  // let table = document.createElement("table");
 
-  //Creat table inside board id
-  for (let i = 0; i < 9; i++) {
-    let row = document.createElement("tr");
-    for (let j = 0; j < 9; j++) {
-      let column = document.createElement("td");
-      row.appendChild(column);
-      if ((i + j) % 2 == 0) {
-        column.setAttribute("class", "bg_board1");
-      } else {
-        column.setAttribute("class", "bg_board2");
-      }
-      column.addEventListener("click", () => {
-        selection(i, j);
-      });
-    }
-    table.appendChild(row);
-  }
-  board.appendChild(table);
+  // //Creat table inside board id
+  // for (let i = 0; i < 9; i++) {
+  //   let row = document.createElement("tr");
+  //   for (let j = 0; j < 9; j++) {
+  //     let column = document.createElement("td");
+  //     row.appendChild(column);
+  //     if ((i + j) % 2 == 0) {
+  //       column.setAttribute("class", "bg_board1");
+  //     } else {
+  //       column.setAttribute("class", "bg_board2");
+  //     }
+  //     column.addEventListener("click", () => {
+  //       selection(i, j);
+  //     });
+  //   }
+  //   table.appendChild(row);
+  // }
+  // board.appendChild(table);
 
-  //Parcourir tableau
-  entireBoard.forEach((row, i) => {
-    row.forEach((cell, j) => {
-      let img = document.createElement("img");
-      switch (cell) {
-        case 1:
-          img.setAttribute("src", "assets/img/black_piece.svg");
-          break;
-        case 2:
-          img.setAttribute("src", "assets/img/white_piece.svg");
-          break;
-        case 3:
-          img.setAttribute("src", "assets/img/white_king.svg");
-          break;
-        case 4:
-          img.setAttribute("src", "assets/img/win_condition.svg");
-          break;
-      }
-      document
-        .getElementById("board")
-        .querySelectorAll("tr")
-        [i].querySelectorAll("td")
-        [j].appendChild(img);
-    });
-  });
+  // //Parcourir tableau
+  // entireBoard.forEach((row, i) => {
+  //   row.forEach((cell, j) => {
+  //     let img = document.createElement("img");
+  //     switch (cell) {
+  //       case 1:
+  //         img.setAttribute("src", "assets/img/black_piece.svg");
+  //         break;
+  //       case 2:
+  //         img.setAttribute("src", "assets/img/white_piece.svg");
+  //         break;
+  //       case 3:
+  //         img.setAttribute("src", "assets/img/white_king.svg");
+  //         break;
+  //       case 4:
+  //         img.setAttribute("src", "assets/img/win_condition.svg");
+  //         break;
+  //     }
+  //     document
+  //       .getElementById("board")
+  //       .querySelectorAll("tr")
+  //       [i].querySelectorAll("td")
+  //       [j].appendChild(img);
+  //   });
+  // });
 })();
