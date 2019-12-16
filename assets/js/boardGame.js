@@ -20,16 +20,29 @@ const white_king = "assets/img/white_king.svg";
 const kingCase = "assets/img/win_condition.svg";
 
 let game;
+let currentPiece = {};
 
-export const selection = (id) => {
-  // let number = entireBoard[x][y];
-  console.log(id);
-  console.log(game.getPiecesByCoordinate(id));
+export const selection = (coordinate) => {
+  const cell = game.getPiecesByCoordinate(coordinate);
+  console.log(cell);
 
-  if (true){
-
+  //select one piece of the board
+  if (cell != undefined){
+    // if (isEmpty(currentPiece)) {
+    currentPiece = cell.copy_chess();
+    currentPiece .coordinate = coordinate;
+    // }
   }
-
+  else if (!isEmpty(currentPiece)){
+    if (game.inKingCase(coordinate)){
+      
+      
+    }
+    else{
+      console.log('move');
+    }
+  }
+  console.log('currentPiece', currentPiece);
   // switch (number) {
   //   case 0:
   //     move(number, x, y);
@@ -42,12 +55,15 @@ export const selection = (id) => {
   //       }
   //     }
   //     break;
-  //   default:
-  //     currentPiece(number, x, y);
   // }
 
   // killKing();
 };
+
+const isEmpty = (currentPiece) => {
+  for(let item in currentPiece) return false;
+  return true; 
+}
 
 //Parcourir tableau
 export const printTable = () => {
@@ -80,7 +96,4 @@ export const printTable = () => {
           [j].appendChild(img);
       });
     });
-  console.log(game);
-  console.log(game._pieces['4 4'] instanceof Chess);
-  
 }

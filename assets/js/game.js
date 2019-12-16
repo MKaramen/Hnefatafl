@@ -14,4 +14,7 @@ export class Game{
     getPiecesByCoordinate(coord) {
       return this._pieces[coord];
     }
+    inKingCase(coordinate){
+      return this._kingCase[coordinate] != undefined 
+    }
   }

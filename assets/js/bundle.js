@@ -122,16 +122,29 @@ const white_king = "assets/img/white_king.svg";
 const kingCase = "assets/img/win_condition.svg";
 
 let game;
+let currentPiece = {};
 
-const selection = (id) => {
-  // let number = entireBoard[x][y];
-  console.log(id);
-  console.log(game.getPiecesByCoordinate(id));
+const selection = (coordinate) => {
+  const cell = game.getPiecesByCoordinate(coordinate);
+  console.log(cell);
 
-  if (true){
-
+  //select one piece of the board
+  if (cell != undefined){
+    // if (isEmpty(currentPiece)) {
+    currentPiece = cell.copy_chess();
+    currentPiece .coordinate = coordinate;
+    // }
   }
-
+  else if (!isEmpty(currentPiece)){
+    if (game.inKingCase(coordinate)){
+      
+      
+    }
+    else{
+      console.log('move');
+    }
+  }
+  console.log('currentPiece', currentPiece);
   // switch (number) {
   //   case 0:
   //     move(number, x, y);
@@ -144,12 +157,15 @@ const selection = (id) => {
   //       }
   //     }
   //     break;
-  //   default:
-  //     currentPiece(number, x, y);
   // }
 
   // killKing();
 };
+
+const isEmpty = (currentPiece) => {
+  for(let item in currentPiece) return false;
+  return true; 
+}
 
 //Parcourir tableau
 const printTable = () => {
@@ -182,9 +198,6 @@ const printTable = () => {
           [j].appendChild(img);
       });
     });
-  console.log(game);
-  console.log(game._pieces['4 4'] instanceof _chess__WEBPACK_IMPORTED_MODULE_0__["Chess"]);
-  
 }
 
 /***/ }),
@@ -204,6 +217,14 @@ class Chess{
         this._color = color;
         this._img = img;
         this._king = king;
+    }
+
+    copy_chess(){
+        let data = {}
+        data._color = this._color;
+        data._img = this._img;
+        data._king = this._king;
+        return data;
     }
 }
 
@@ -234,6 +255,9 @@ class Game{
 
     getPiecesByCoordinate(coord) {
       return this._pieces[coord];
+    }
+    inKingCase(coordinate){
+      return this._kingCase[coordinate] != undefined 
     }
   }
 
