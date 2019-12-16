@@ -1,4 +1,4 @@
-import {Chess, King} from "./chess";
+import {Chess} from "./chess";
 import {KingCase} from "./kingCase";
 import {Game} from "./game";
 
@@ -24,6 +24,11 @@ let game;
 export const selection = (id) => {
   // let number = entireBoard[x][y];
   console.log(id);
+  console.log(game.getPiecesByCoordinate(id));
+
+  if (true){
+
+  }
 
   // switch (number) {
   //   case 0:
@@ -53,15 +58,15 @@ export const printTable = () => {
         switch (cell) {
           case 1:
             img.setAttribute("src", black);
-            game.addPiece(i, j, new Chess("black", black));
+            game.addPiece(i, j, new Chess("black", black, false));
             break;
           case 2:
             img.setAttribute("src", white);
-            game.addPiece(i, j, new Chess("white", white));
+            game.addPiece(i, j, new Chess("white", white, false));
             break;
           case 3:
             img.setAttribute("src", white_king);
-            game.addPiece(i, j, new King("white", white_king));
+            game.addPiece(i, j, new Chess("white", white_king, true));
             break;
           case 4:
             img.setAttribute("src", kingCase);

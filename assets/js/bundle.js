@@ -126,6 +126,11 @@ let game;
 const selection = (id) => {
   // let number = entireBoard[x][y];
   console.log(id);
+  console.log(game.getPiecesByCoordinate(id));
+
+  if (true){
+
+  }
 
   // switch (number) {
   //   case 0:
@@ -155,15 +160,15 @@ const printTable = () => {
         switch (cell) {
           case 1:
             img.setAttribute("src", black);
-            game.addPiece(i, j, new _chess__WEBPACK_IMPORTED_MODULE_0__["Chess"]("black", black));
+            game.addPiece(i, j, new _chess__WEBPACK_IMPORTED_MODULE_0__["Chess"]("black", black, false));
             break;
           case 2:
             img.setAttribute("src", white);
-            game.addPiece(i, j, new _chess__WEBPACK_IMPORTED_MODULE_0__["Chess"]("white", white));
+            game.addPiece(i, j, new _chess__WEBPACK_IMPORTED_MODULE_0__["Chess"]("white", white, false));
             break;
           case 3:
             img.setAttribute("src", white_king);
-            game.addPiece(i, j, new _chess__WEBPACK_IMPORTED_MODULE_0__["King"]("white", white_king));
+            game.addPiece(i, j, new _chess__WEBPACK_IMPORTED_MODULE_0__["Chess"]("white", white_king, true));
             break;
           case 4:
             img.setAttribute("src", kingCase);
@@ -188,24 +193,17 @@ const printTable = () => {
 /*!****************************!*\
   !*** ./assets/js/chess.js ***!
   \****************************/
-/*! exports provided: Chess, King */
+/*! exports provided: Chess */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Chess", function() { return Chess; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "King", function() { return King; });
 class Chess{
-    constructor(color, img){
+    constructor(color, img, king){
         this._color = color;
         this._img = img;
-    }
-}
-
-class King extends Chess{
-    constructor(color, img) {
-        super(color, img);
-        this._king = true;
+        this._king = king;
     }
 }
 
@@ -232,6 +230,10 @@ class Game{
   
     addKingCase(x, y, kCase){
       this._kingCase[`${x} ${y}`] = kCase;
+    }
+
+    getPiecesByCoordinate(coord) {
+      return this._pieces[coord];
     }
   }
 
@@ -271,7 +273,7 @@ __webpack_require__.r(__webpack_exports__);
 
 (() => {
 
-    Object(_table__WEBPACK_IMPORTED_MODULE_0__["createTable"])();
+    Object(_table__WEBPACK_IMPORTED_MODULE_0__["default"])();
     Object(_boardGame__WEBPACK_IMPORTED_MODULE_1__["printTable"])();
 })();
 
@@ -281,17 +283,16 @@ __webpack_require__.r(__webpack_exports__);
 /*!****************************!*\
   !*** ./assets/js/table.js ***!
   \****************************/
-/*! exports provided: createTable */
+/*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "createTable", function() { return createTable; });
 /* harmony import */ var _boardGame__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./boardGame */ "./assets/js/boardGame.js");
 
 
 //Creat table inside board id
-const createTable = () => {
+/* harmony default export */ __webpack_exports__["default"] = (() => {
     let board = document.getElementById("board");
     let table = document.createElement("table");
 
@@ -313,7 +314,7 @@ const createTable = () => {
     table.appendChild(row);
     }
     board.appendChild(table);
-}
+});
 
 /***/ })
 

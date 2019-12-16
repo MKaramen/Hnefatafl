@@ -1,7 +1,7 @@
 import {selection} from "./boardGame";
 
 //Creat table inside board id
-export const createTable = () => {
+export default () => {
     let board = document.getElementById("board");
     let table = document.createElement("table");
 

@@ -1,4 +1,4 @@
-import {createTable} from "./table";
+import createTable from "./table";
 import {printTable} from "./boardGame"
 
 (() => {

@@ -10,4 +10,8 @@ export class Game{
     addKingCase(x, y, kCase){
       this._kingCase[`${x} ${y}`] = kCase;
     }
+
+    getPiecesByCoordinate(coord) {
+      return this._pieces[coord];
+    }
   }
