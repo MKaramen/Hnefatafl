@@ -126,13 +126,12 @@ let currentPiece = {};
 
 const selection = (coordinate) => {
   const cell = game.getPiecesByCoordinate(coordinate);
-  console.log(cell);
 
   //select one piece of the board
   if (cell != undefined){
     // if (isEmpty(currentPiece)) {
     currentPiece = cell.copy_chess();
-    currentPiece .coordinate = coordinate;
+    currentPiece.coordinate = coordinate;
     // }
   }
   else if (!isEmpty(currentPiece)){
@@ -142,6 +141,7 @@ const selection = (coordinate) => {
     }
     else{
       console.log('move');
+      move(coordinate);
     }
   }
   console.log('currentPiece', currentPiece);
@@ -162,10 +162,22 @@ const selection = (coordinate) => {
   // killKing();
 };
 
+const move = (coordinate) => {
+  if (checkMove(coordinate)){
+    console.log('must check cell on the way');
+  }
+};
+
+const checkMove = (coordinate) => {
+  const piece_coord = currentPiece.coordinate.split(' ');
+  const move = coordinate.split(' ');
+  return (piece_coord[0] == move[0] || piece_coord[1] == coord[1]) && game.getInGame();
+}
+
 const isEmpty = (currentPiece) => {
   for(let item in currentPiece) return false;
   return true; 
-}
+};
 
 //Parcourir tableau
 const printTable = () => {
@@ -241,25 +253,29 @@ class Chess{
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Game", function() { return Game; });
 class Game{
-    constructor(){
-      this._pieces = {};
-      this._kingCase = {};
-    }
-    addPiece(x, y, chess){
-      this._pieces[`${x} ${y}`] = chess;
-    }
-  
-    addKingCase(x, y, kCase){
-      this._kingCase[`${x} ${y}`] = kCase;
-    }
-
-    getPiecesByCoordinate(coord) {
-      return this._pieces[coord];
-    }
-    inKingCase(coordinate){
-      return this._kingCase[coordinate] != undefined 
-    }
+  constructor(){
+    this._pieces = {};
+    this._kingCase = {};
+    this._inGame = true;
   }
+  addPiece(x, y, chess){
+    this._pieces[`${x} ${y}`] = chess;
+  }
+
+  addKingCase(x, y, kCase){
+    this._kingCase[`${x} ${y}`] = kCase;
+  }
+
+  getPiecesByCoordinate(coord) {
+    return this._pieces[coord];
+  }
+  inKingCase(coordinate){
+    return this._kingCase[coordinate] != undefined 
+  }
+  getInGame(){
+    return this._inGame;
+  }
+}
 
 /***/ }),
 
