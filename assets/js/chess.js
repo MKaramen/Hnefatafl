@@ -12,4 +12,12 @@ export class Chess{
         data._king = this._king;
         return data;
     }
+
+    getColor(){
+        return this._color;
+    }
+
+    getKing(){
+        return this._king;
+    }
 }

@@ -1,4 +1,3 @@
-import {Chess} from "./chess";
 import {KingCase} from "./kingCase";
 import {Game} from "./game";
 
@@ -21,6 +20,7 @@ const kingCase = "assets/img/win_condition.svg";
 
 let game;
 let currentPiece = {};
+let board_length = 9;
 
 export const selection = (coordinate) => {
   const cell = game.getPiecesByCoordinate(coordinate);
@@ -42,6 +42,8 @@ export const selection = (coordinate) => {
     }
   }
   console.log('currentPiece', currentPiece);
+  console.log('game', game);
+  
   // switch (number) {
   //   case 0:
   //     move(number, x, y);
@@ -63,13 +65,9 @@ const move = (coordinate) => {
   if (checkMove(coordinate)){
     const validMove = checkPath(coordinate);
     if (validMove){
-      const img = document.getElementById(currentPiece.coordinate).firstChild;
-      const parentMove = document.getElementById(coordinate);
-      img.remove();
-      parentMove.appendChild(img);
-      game.changeChessCoordinate(currentPiece.coordinate, coordinate);
+      moveImg(coordinate)
       currentPiece = {};
-      checkArea(coordinate);
+      selectArea(coordinate);
     }
   }
 };
@@ -97,7 +95,54 @@ const checkPath = (coordinate) => {
   return result;
 };
 
-const chackArea = (coordinate) => {
+const moveImg = (coordinate) => {
+  const img = document.getElementById(currentPiece.coordinate).firstChild;
+  const parentMove = document.getElementById(coordinate);
+  img.remove();
+  parentMove.appendChild(img);
+  game.changeChessCoordinate(currentPiece.coordinate, coordinate);
+};
+
+const selectArea = (coordinate) => {
+  const anchor = coordinate.split(' ').map(elem => parseInt(elem));
+  for(let i = -1; i < 2; i++){
+    const start_j =  i ? 0 : -1;
+    const end_j = i ? 1 : 2;
+    for(let j = start_j; j < end_j; j += end_j){
+      kill(anchor, i, j);
+    }
+  }
+};
+
+const kill = (anchor, x, y) => {
+  const top_border = anchor[0]  + x >= 0 && anchor[0] + (2 * x) >= 0;
+  const bottom_border = anchor[0] + x < board_length && anchor[0] +(2 * x) < board_length;
+  const left_border = anchor[1] + y >= 0 && anchor[1] + (2 * y) >= 0;
+  const right_border = anchor[1] + y < board_length && anchor[1] + (2 * y) < board_length;
+
+  if (top_border && bottom_border && left_border && right_border) {
+    const anchor_color = game.getColorChess(`${anchor[0]} ${anchor[1]}`);
+    const enemy_color =  game.getColorChess(`${anchor[0] + x} ${anchor[1] + y}`);
+    
+    if (enemy_color !== "" && anchor_color !== enemy_color){
+      const enemy_king = game.getKingChess(`${anchor[0] + x} ${anchor[1] + y}`);
+      const ally_color = game.getColorChess(`${anchor[0] + (2 * x)} ${anchor[1] + (2 * y)}`)
+      
+      if (enemy_king){
+        //kill king
+      }
+      else if (ally_color === anchor_color || game.inKingCase(`${anchor[0] + (2 * x)} ${anchor[1] + (2 * y)}`)) {
+        const img = document.getElementById(`${anchor[0] + x} ${anchor[1] + y}`).firstChild;
+        img.remove();
+        game.delete(`${anchor[0] + x} ${anchor[1] + y}`)
+      }
+      
+    }
+    
+    
+    
+    
+  }
 
 };
 
@@ -114,13 +159,13 @@ export const printTable = () => {
       if(cell){
         switch (cell) {
           case 1:
-            createImg(i, j, black, false);
+            createImg(i, j, 'black', black, false);
             break;
           case 2:
-            createImg(i, j, white, false);
+            createImg(i, j, 'white', white, false);
             break;
           case 3:
-            createImg(i, j, white_king, true);
+            createImg(i, j, 'white', white_king, true);
             createKingCase(i, j);
             break;
           case 4:
@@ -132,11 +177,11 @@ export const printTable = () => {
   });
 }
 
-const createImg = (x, y , path, king) => {
+const createImg = (x, y , str, path, king) => {
   let img = document.createElement("img");
   img.setAttribute("src", path);
   document.getElementById(`${x} ${y}`).appendChild(img);
-  game.addPiece(x, y, new Chess("black", path, king));
+  game.addPiece(x, y, str, path, king);
 };
 
 const createKingCase = (x, y) => {
