@@ -230,21 +230,39 @@ const kill = (anchor, x, y) => {
       const ally_color = game.getColorChess(`${anchor[0] + (2 * x)} ${anchor[1] + (2 * y)}`)
       
       if (enemy_king){
-        //kill king
+        killKing(anchor[0] + x, anchor[1] + y);
       }
       else if (ally_color === anchor_color || game.inKingCase(`${anchor[0] + (2 * x)} ${anchor[1] + (2 * y)}`)) {
         const img = document.getElementById(`${anchor[0] + x} ${anchor[1] + y}`).firstChild;
         img.remove();
         game.delete(`${anchor[0] + x} ${anchor[1] + y}`)
       }
-      
     }
-    
-    
-    
-    
   }
+};
 
+const killKing = (x, y) => {
+
+  let count = 0;
+
+  if (game.getInGame()) {
+    if (game.isBlackChess(`${x-1} ${y}`) || game.inKingCase(`${x-1} ${y}`)){
+      count++;
+    }
+    if (game.isBlackChess(`${x+1} ${y}`) || game.inKingCase(`${x+1} ${y}`)){
+      count++;
+    }
+    if (game.isBlackChess(`${x} ${y-1}`) || game.inKingCase(`${x} ${y-1}`)){
+      count++;
+    }
+    if (game.isBlackChess(`${x} ${y+1}`) || game.inKingCase(`${x} ${y+1}`)){
+      count++;
+    }
+  }
+  
+  if (count == 4) {
+    alert("Black win");
+  }
 };
 
 const isEmpty = (currentPiece) => {
@@ -348,28 +366,15 @@ class Game{
     this._kingCase = {};
     this._inGame = true;
   }
-  addPiece(x, y, str, path, king){
-    this._pieces[`${x} ${y}`] = new _chess__WEBPACK_IMPORTED_MODULE_0__["Chess"](str, path, king);
-  }
-
-  addKingCase(x, y, kCase){
-    this._kingCase[`${x} ${y}`] = kCase;
-  }
 
   getPiecesByCoordinate(coord) {
     return this._pieces[coord];
   }
-  inKingCase(coordinate){
-    return this._kingCase[coordinate] != undefined 
-  }
+
   getInGame(){
     return this._inGame;
   }
-
-  changeChessCoordinate(oldCoord, newCoord){
-    delete Object.assign(this._pieces, {[newCoord]: this._pieces[oldCoord]})[oldCoord];
-  }
-
+  
   getColorChess(coordinate){
     if (this._pieces[coordinate] != undefined) return this._pieces[coordinate].getColor();
     else return "";
@@ -378,6 +383,29 @@ class Game{
   getKingChess(coordinate){
     return this._pieces[coordinate].getKing();
   }
+
+  addPiece(x, y, str, path, king){
+    this._pieces[`${x} ${y}`] = new _chess__WEBPACK_IMPORTED_MODULE_0__["Chess"](str, path, king);
+  }
+
+  addKingCase(x, y, kCase){
+    this._kingCase[`${x} ${y}`] = kCase;
+  }
+
+  
+  inKingCase(coordinate){
+    return this._kingCase[coordinate] != undefined;
+  }
+
+  isBlackChess(coordinate){
+    return this._pieces[coordinate] != undefined && this._pieces[coordinate].getColor() == 'black';
+  }
+
+  changeChessCoordinate(oldCoord, newCoord){
+    delete Object.assign(this._pieces, {[newCoord]: this._pieces[oldCoord]})[oldCoord];
+  }
+
+  
 
   delete(coordinate){
     delete this._pieces[coordinate];

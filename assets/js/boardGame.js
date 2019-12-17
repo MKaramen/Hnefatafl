@@ -129,21 +129,39 @@ const kill = (anchor, x, y) => {
       const ally_color = game.getColorChess(`${anchor[0] + (2 * x)} ${anchor[1] + (2 * y)}`)
       
       if (enemy_king){
-        //kill king
+        killKing(anchor[0] + x, anchor[1] + y);
       }
       else if (ally_color === anchor_color || game.inKingCase(`${anchor[0] + (2 * x)} ${anchor[1] + (2 * y)}`)) {
         const img = document.getElementById(`${anchor[0] + x} ${anchor[1] + y}`).firstChild;
         img.remove();
         game.delete(`${anchor[0] + x} ${anchor[1] + y}`)
       }
-      
     }
-    
-    
-    
-    
   }
+};
 
+const killKing = (x, y) => {
+
+  let count = 0;
+
+  if (game.getInGame()) {
+    if (game.isBlackChess(`${x-1} ${y}`) || game.inKingCase(`${x-1} ${y}`)){
+      count++;
+    }
+    if (game.isBlackChess(`${x+1} ${y}`) || game.inKingCase(`${x+1} ${y}`)){
+      count++;
+    }
+    if (game.isBlackChess(`${x} ${y-1}`) || game.inKingCase(`${x} ${y-1}`)){
+      count++;
+    }
+    if (game.isBlackChess(`${x} ${y+1}`) || game.inKingCase(`${x} ${y+1}`)){
+      count++;
+    }
+  }
+  
+  if (count == 4) {
+    alert("Black win");
+  }
 };
 
 const isEmpty = (currentPiece) => {
