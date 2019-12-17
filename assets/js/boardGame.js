@@ -38,7 +38,6 @@ export const selection = (coordinate) => {
       
     }
     else{
-      console.log('move');
       move(coordinate);
     }
   }
@@ -62,15 +61,45 @@ export const selection = (coordinate) => {
 
 const move = (coordinate) => {
   if (checkMove(coordinate)){
-    console.log('must check cell on the way');
+    const validMove = checkPath(coordinate);
+    if (validMove){
+      const img = document.getElementById(currentPiece.coordinate).firstChild;
+      const parentMove = document.getElementById(coordinate);
+      img.remove();
+      parentMove.appendChild(img);
+      game.changeChessCoordinate(currentPiece.coordinate, coordinate);
+      currentPiece = {};
+      checkArea(coordinate);
+    }
   }
 };
 
 const checkMove = (coordinate) => {
   const piece_coord = currentPiece.coordinate.split(' ');
   const move = coordinate.split(' ');
-  return (piece_coord[0] == move[0] || piece_coord[1] == coord[1]) && game.getInGame();
+  return (piece_coord[0] == move[0] || piece_coord[1] == move[1]) && game.getInGame();
 }
+
+const checkPath = (coordinate) => {
+  //convert coordinate in string to integer
+  const piece = currentPiece.coordinate.split(' ').map(elem => parseInt(elem));
+  const move = coordinate.split(' ').map(elem => parseInt(elem));
+  let result = true;
+
+  for(let i=(piece[0] < move[0]? piece[0] + 1: move[0]), end_i=(piece[0] > move[0]? piece[0] - 1: move[0]); i <= end_i && result; i++){    
+    for(let j=(piece[1] < move[1]? piece[1] + 1: move[1]), end_j=(piece[1] > move[1]? piece[1] - 1: move[1]); j <= end_j && result; j++){
+      
+      if(game.getPiecesByCoordinate(`${i} ${j}`) != undefined){
+        result = false;
+      }
+    }
+  }  
+  return result;
+};
+
+const chackArea = (coordinate) => {
+
+};
 
 const isEmpty = (currentPiece) => {
   for(let item in currentPiece) return false;
@@ -81,31 +110,36 @@ const isEmpty = (currentPiece) => {
 export const printTable = () => {
   game = new Game();
   board9X9.forEach((row, i) => {
-      row.forEach((cell, j) => {
-        let img = document.createElement("img");
+    row.forEach((cell, j) => {
+      if(cell){
         switch (cell) {
           case 1:
-            img.setAttribute("src", black);
-            game.addPiece(i, j, new Chess("black", black, false));
+            createImg(i, j, black, false);
             break;
           case 2:
-            img.setAttribute("src", white);
-            game.addPiece(i, j, new Chess("white", white, false));
+            createImg(i, j, white, false);
             break;
           case 3:
-            img.setAttribute("src", white_king);
-            game.addPiece(i, j, new Chess("white", white_king, true));
+            createImg(i, j, white_king, true);
+            createKingCase(i, j);
             break;
           case 4:
-            img.setAttribute("src", kingCase);
-            game.addKingCase(i, j, new KingCase(kingCase));
+            createKingCase(i, j);
             break;
         }
-        document
-          .getElementById("board")
-          .querySelectorAll("tr")
-          [i].querySelectorAll("td")
-          [j].appendChild(img);
-      });
+      }
     });
+  });
 }
+
+const createImg = (x, y , path, king) => {
+  let img = document.createElement("img");
+  img.setAttribute("src", path);
+  document.getElementById(`${x} ${y}`).appendChild(img);
+  game.addPiece(x, y, new Chess("black", path, king));
+};
+
+const createKingCase = (x, y) => {
+  document.getElementById(`${x} ${y}`).classList.add('special');
+  game.addKingCase(x, y, new KingCase(kingCase));
+};

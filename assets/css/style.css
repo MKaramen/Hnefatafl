@@ -9,4 +9,9 @@
   height: 60px;
   width: 60px;
 }
+
+.special {
+  background-image: url("../img/win_condition.svg");
+  background-repeat: no-repeat;
+}
 /*# sourceMappingURL=style.css.map */

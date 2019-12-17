@@ -21,4 +21,8 @@ export class Game{
   getInGame(){
     return this._inGame;
   }
+
+  changeChessCoordinate(oldCoord, newCoord){
+    delete Object.assign(this._pieces, {[newCoord]: this._pieces[oldCoord]})[oldCoord];
+  }
 }
