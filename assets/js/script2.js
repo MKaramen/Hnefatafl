@@ -254,7 +254,7 @@ const killKing = () => {
       if (cell == 2) numberWhitePiece++;
     })
   })
-  if (count == 4 || (count == 3 && numberWhitePiece == 0 && !throne)) {
+  if (count == 4 || (count == 3 && numberWhitePiece == 1 && !throne)) {
     inGame = false;
     alert("Black win");
   }

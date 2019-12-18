@@ -6,6 +6,8 @@ export class Game{
     this._pieces = {};
     this._kingCase = {};
     this._inGame = true;
+    this._blackNumber = 0;
+    this._whiteNumber = 0;
   }
 
   getPiecesByCoordinate(coord) {
@@ -24,9 +26,21 @@ export class Game{
   getKingChess(coordinate){
     return this._pieces[coordinate].getKing();
   }
+  
+  getWhiteNumber(){
+    return this._whiteNumber;
+  }
 
   addPiece(x, y, str, path, king){
     this._pieces[`${x} ${y}`] = new Chess(str, path, king);
+    switch(str){
+      case "black":
+        this._blackNumber++;
+        break;
+      case "white":
+        this._whiteNumber++
+        break;
+    }
   }
 
   addKingCase(x, y, kCase){
@@ -49,6 +63,15 @@ export class Game{
   
 
   delete(coordinate){
+    const color = this._pieces[coordinate].getColor();
+    switch(color){
+      case "black":
+        this._blackNumber--;
+        break;
+      case "white":
+        this._whiteNumber--;
+        break;
+    }
     delete this._pieces[coordinate];
   }
 }

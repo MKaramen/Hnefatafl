@@ -34,8 +34,14 @@ export const selection = (coordinate) => {
   }
   else if (!isEmpty(currentPiece)){
     if (game.inKingCase(coordinate)){
-      
-      
+      if(currentPiece._king){
+        move(coordinate);
+        const coord_list = coordinate.split(' ');
+        console.log('yes', coord_list);
+        if (coord_list[0] !== '4' && coord_list[1] !== '4'){
+          alert('White win!');
+        }
+      }
     }
     else{
       move(coordinate);
@@ -43,22 +49,6 @@ export const selection = (coordinate) => {
   }
   console.log('currentPiece', currentPiece);
   console.log('game', game);
-  
-  // switch (number) {
-  //   case 0:
-  //     move(number, x, y);
-  //     break;
-  //   case 4:
-  //     if (selectedPiece.color == 3) {
-  //       move(number, x, y);
-  //       if (x != 4 && y != 4) {
-  //         checkWin(x, y);
-  //       }
-  //     }
-  //     break;
-  // }
-
-  // killKing();
 };
 
 const move = (coordinate) => {
@@ -115,27 +105,21 @@ const selectArea = (coordinate) => {
 };
 
 const kill = (anchor, x, y) => {
-  const top_border = anchor[0]  + x >= 0 && anchor[0] + (2 * x) >= 0;
-  const bottom_border = anchor[0] + x < board_length && anchor[0] +(2 * x) < board_length;
-  const left_border = anchor[1] + y >= 0 && anchor[1] + (2 * y) >= 0;
-  const right_border = anchor[1] + y < board_length && anchor[1] + (2 * y) < board_length;
 
-  if (top_border && bottom_border && left_border && right_border) {
-    const anchor_color = game.getColorChess(`${anchor[0]} ${anchor[1]}`);
-    const enemy_color =  game.getColorChess(`${anchor[0] + x} ${anchor[1] + y}`);
+  const anchor_color = game.getColorChess(`${anchor[0]} ${anchor[1]}`);
+  const enemy_color =  game.getColorChess(`${anchor[0] + x} ${anchor[1] + y}`);
+  
+  if (enemy_color !== "" && anchor_color !== enemy_color){
+    const enemy_king = game.getKingChess(`${anchor[0] + x} ${anchor[1] + y}`);
+    const ally_color = game.getColorChess(`${anchor[0] + (2 * x)} ${anchor[1] + (2 * y)}`)
     
-    if (enemy_color !== "" && anchor_color !== enemy_color){
-      const enemy_king = game.getKingChess(`${anchor[0] + x} ${anchor[1] + y}`);
-      const ally_color = game.getColorChess(`${anchor[0] + (2 * x)} ${anchor[1] + (2 * y)}`)
-      
-      if (enemy_king){
-        killKing(anchor[0] + x, anchor[1] + y);
-      }
-      else if (ally_color === anchor_color || game.inKingCase(`${anchor[0] + (2 * x)} ${anchor[1] + (2 * y)}`)) {
-        const img = document.getElementById(`${anchor[0] + x} ${anchor[1] + y}`).firstChild;
-        img.remove();
-        game.delete(`${anchor[0] + x} ${anchor[1] + y}`)
-      }
+    if (enemy_king){
+      killKing(anchor[0] + x, anchor[1] + y);
+    }
+    else if (ally_color === anchor_color || game.inKingCase(`${anchor[0] + (2 * x)} ${anchor[1] + (2 * y)}`)) {
+      const img = document.getElementById(`${anchor[0] + x} ${anchor[1] + y}`).firstChild;
+      img.remove();
+      game.delete(`${anchor[0] + x} ${anchor[1] + y}`)
     }
   }
 };
@@ -144,25 +128,29 @@ const killKing = (x, y) => {
 
   let count = 0;
 
-  if (game.getInGame()) {
-    if (game.isBlackChess(`${x-1} ${y}`) || game.inKingCase(`${x-1} ${y}`)){
-      count++;
-    }
-    if (game.isBlackChess(`${x+1} ${y}`) || game.inKingCase(`${x+1} ${y}`)){
-      count++;
-    }
-    if (game.isBlackChess(`${x} ${y-1}`) || game.inKingCase(`${x} ${y-1}`)){
-      count++;
-    }
-    if (game.isBlackChess(`${x} ${y+1}`) || game.inKingCase(`${x} ${y+1}`)){
-      count++;
-    }
+  if (game.isBlackChess(`${x-1} ${y}`) || game.inKingCase(`${x-1} ${y}`)){
+    count++;
+  }
+  if (game.isBlackChess(`${x+1} ${y}`) || game.inKingCase(`${x+1} ${y}`)){
+    count++;
+  }
+  if (game.isBlackChess(`${x} ${y-1}`) || game.inKingCase(`${x} ${y-1}`)){
+    count++;
+  }
+  if (game.isBlackChess(`${x} ${y+1}`) || game.inKingCase(`${x} ${y+1}`)){
+    count++;
   }
   
-  if (count == 4) {
+  console.log('je suis ici', count);
+  
+  if (count == 4 || (count == 3 && game.getWhiteNumber() == 1 && edge(x, y))) {
     alert("Black win");
   }
 };
+
+const edge = (x, y) => {
+  return x == 0 || x == board_length - 1 || y == 0 || y == board_length - 1;
+}
 
 const isEmpty = (currentPiece) => {
   for(let item in currentPiece) return false;
