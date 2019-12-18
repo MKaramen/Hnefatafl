@@ -37,7 +37,6 @@ export const selection = (coordinate) => {
       if(currentPiece._king){
         move(coordinate);
         const coord_list = coordinate.split(' ');
-        console.log('yes', coord_list);
         if (coord_list[0] !== '4' && coord_list[1] !== '4'){
           alert('White win!');
         }
@@ -47,8 +46,8 @@ export const selection = (coordinate) => {
       move(coordinate);
     }
   }
-  console.log('currentPiece', currentPiece);
-  console.log('game', game);
+  // console.log('currentPiece', currentPiece);
+  // console.log('game', game);
 };
 
 const move = (coordinate) => {
@@ -86,8 +85,11 @@ const checkPath = (coordinate) => {
 };
 
 const moveImg = (coordinate) => {
-  const img = document.getElementById(currentPiece.coordinate).firstChild;
-  const parentMove = document.getElementById(coordinate);
+  const currentList = currentPiece.coordinate.split(' ').map(item => parseInt(item));
+  const coordList = coordinate.split(' ').map(item => parseInt(item));
+  
+  const img = document.querySelector('#board table').children[ currentList[0] ].children[ currentList[1] ].firstChild;
+  const parentMove = document.querySelector('#board table').children[ coordList[0] ].children[ coordList[1] ];
   img.remove();
   parentMove.appendChild(img);
   game.changeChessCoordinate(currentPiece.coordinate, coordinate);
@@ -117,7 +119,8 @@ const kill = (anchor, x, y) => {
       killKing(anchor[0] + x, anchor[1] + y);
     }
     else if (ally_color === anchor_color || game.inKingCase(`${anchor[0] + (2 * x)} ${anchor[1] + (2 * y)}`)) {
-      const img = document.getElementById(`${anchor[0] + x} ${anchor[1] + y}`).firstChild;
+      
+      const img = document.querySelector('#board table').children[ anchor[0] + x ].children[ anchor[1] + y ].firstChild;
       img.remove();
       game.delete(`${anchor[0] + x} ${anchor[1] + y}`)
     }
@@ -140,9 +143,7 @@ const killKing = (x, y) => {
   if (game.isBlackChess(`${x} ${y+1}`) || game.inKingCase(`${x} ${y+1}`)){
     count++;
   }
-  
-  console.log('je suis ici', count);
-  
+    
   if (count == 4 || (count == 3 && game.getWhiteNumber() == 1 && edge(x, y))) {
     alert("Black win");
   }
@@ -186,11 +187,11 @@ export const printTable = () => {
 const createImg = (x, y , str, path, king) => {
   let img = document.createElement("img");
   img.setAttribute("src", path);
-  document.getElementById(`${x} ${y}`).appendChild(img);
+  document.querySelector('#board table').children[x].children[y].appendChild(img);
   game.addPiece(x, y, str, path, king);
 };
 
 const createKingCase = (x, y) => {
-  document.getElementById(`${x} ${y}`).classList.add('special');
+  document.querySelector('#board table').children[x].children[y].classList.add('special');
   game.addKingCase(x, y, new KingCase(kingCase));
 };

@@ -11,16 +11,21 @@ export default () => {
         let column = document.createElement("td");
         row.appendChild(column);
         if ((i + j) % 2 == 0) {
-        column.setAttribute("class", "bg_board1");
+        column.className = "bg_board1";
         } else {
-        column.setAttribute("class", "bg_board2");
+        column.className = "bg_board2";
         }
-        column.setAttribute("id", `${i} ${j}`);
-        column.addEventListener("click", () => {
-            selection(column.id);
-        });
     }
     table.appendChild(row);
     }
     board.appendChild(table);
+    
+    $('#board').on('click', (event) => {
+        const trIndex = event.target.closest('tr').rowIndex;
+        const tdIndex = event.target.closest('td').cellIndex;
+        const coordinate = `${trIndex} ${tdIndex}`;
+        selection(coordinate);
+        
+    });
 }
+

@@ -138,7 +138,6 @@ const selection = (coordinate) => {
       if(currentPiece._king){
         move(coordinate);
         const coord_list = coordinate.split(' ');
-        console.log('yes', coord_list);
         if (coord_list[0] !== '4' && coord_list[1] !== '4'){
           alert('White win!');
         }
@@ -148,8 +147,8 @@ const selection = (coordinate) => {
       move(coordinate);
     }
   }
-  console.log('currentPiece', currentPiece);
-  console.log('game', game);
+  // console.log('currentPiece', currentPiece);
+  // console.log('game', game);
 };
 
 const move = (coordinate) => {
@@ -187,8 +186,11 @@ const checkPath = (coordinate) => {
 };
 
 const moveImg = (coordinate) => {
-  const img = document.getElementById(currentPiece.coordinate).firstChild;
-  const parentMove = document.getElementById(coordinate);
+  const currentList = currentPiece.coordinate.split(' ').map(item => parseInt(item));
+  const coordList = coordinate.split(' ').map(item => parseInt(item));
+  
+  const img = document.querySelector('#board table').children[ currentList[0] ].children[ currentList[1] ].firstChild;
+  const parentMove = document.querySelector('#board table').children[ coordList[0] ].children[ coordList[1] ];
   img.remove();
   parentMove.appendChild(img);
   game.changeChessCoordinate(currentPiece.coordinate, coordinate);
@@ -218,7 +220,8 @@ const kill = (anchor, x, y) => {
       killKing(anchor[0] + x, anchor[1] + y);
     }
     else if (ally_color === anchor_color || game.inKingCase(`${anchor[0] + (2 * x)} ${anchor[1] + (2 * y)}`)) {
-      const img = document.getElementById(`${anchor[0] + x} ${anchor[1] + y}`).firstChild;
+      
+      const img = document.querySelector('#board table').children[ anchor[0] + x ].children[ anchor[1] + y ].firstChild;
       img.remove();
       game.delete(`${anchor[0] + x} ${anchor[1] + y}`)
     }
@@ -241,9 +244,7 @@ const killKing = (x, y) => {
   if (game.isBlackChess(`${x} ${y+1}`) || game.inKingCase(`${x} ${y+1}`)){
     count++;
   }
-  
-  console.log('je suis ici', count);
-  
+    
   if (count == 4 || (count == 3 && game.getWhiteNumber() == 1 && edge(x, y))) {
     alert("Black win");
   }
@@ -287,12 +288,12 @@ const printTable = () => {
 const createImg = (x, y , str, path, king) => {
   let img = document.createElement("img");
   img.setAttribute("src", path);
-  document.getElementById(`${x} ${y}`).appendChild(img);
+  document.querySelector('#board table').children[x].children[y].appendChild(img);
   game.addPiece(x, y, str, path, king);
 };
 
 const createKingCase = (x, y) => {
-  document.getElementById(`${x} ${y}`).classList.add('special');
+  document.querySelector('#board table').children[x].children[y].classList.add('special');
   game.addKingCase(x, y, new _kingCase__WEBPACK_IMPORTED_MODULE_0__["KingCase"](kingCase));
 };
 
@@ -488,19 +489,25 @@ __webpack_require__.r(__webpack_exports__);
         let column = document.createElement("td");
         row.appendChild(column);
         if ((i + j) % 2 == 0) {
-        column.setAttribute("class", "bg_board1");
+        column.className = "bg_board1";
         } else {
-        column.setAttribute("class", "bg_board2");
+        column.className = "bg_board2";
         }
-        column.setAttribute("id", `${i} ${j}`);
-        column.addEventListener("click", () => {
-            Object(_boardGame__WEBPACK_IMPORTED_MODULE_0__["selection"])(column.id);
-        });
     }
     table.appendChild(row);
     }
     board.appendChild(table);
+    
+    $('#board').on('click', (event) => {
+        const trIndex = event.target.closest('tr').rowIndex;
+        const tdIndex = event.target.closest('td').cellIndex;
+        const coordinate = `${trIndex} ${tdIndex}`;
+        Object(_boardGame__WEBPACK_IMPORTED_MODULE_0__["selection"])(coordinate);
+        
+    });
 });
+
+
 
 /***/ })
 
