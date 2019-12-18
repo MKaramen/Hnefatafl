@@ -1,7 +1,7 @@
 import {Chess} from "./chess";
 
 
-export class Game{
+export class Grid{
   constructor(){
     this._pieces = {};
     this._kingCase = {};

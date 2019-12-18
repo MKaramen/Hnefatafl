@@ -1,8 +1,7 @@
-import createTable from "./table";
-import {printTable} from "./boardGame"
+import {displayChess, createTable} from "./boardGame"
 
 (() => {
 
     createTable();
-    printTable();
+    displayChess();
 })();
